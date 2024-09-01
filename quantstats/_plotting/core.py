@@ -100,13 +100,12 @@ def plot_returns_bars(
     hlw=None,
     hlcolor="red",
     hllabel="",
-    resample="A",
+    resample="YE",
     title="Returns",
     match_volatility=False,
     log_scale=False,
     figsize=(10, 6),
     grayscale=False,
-    fontname="Arial",
     ylabel=True,
     subtitle=True,
     savefig=None,
@@ -148,7 +147,7 @@ def plot_returns_bars(
 
     # use a more precise date string for the x axis locations in the toolbar
     fig.suptitle(
-        title, y=0.94, fontweight="bold", fontname=fontname, fontsize=14, color="black"
+        title, y=0.94, fontweight="bold", fontsize=14, color="black"
     )
 
     if subtitle:
@@ -204,7 +203,7 @@ def plot_returns_bars(
     ax.set_xlabel("")
     if ylabel:
         ax.set_ylabel(
-            "Returns", fontname=fontname, fontweight="bold", fontsize=12, color="black"
+            "Returns", fontweight="bold", fontsize=12, color="black"
         )
         ax.yaxis.set_label_coords(-0.1, 0.5)
 
@@ -260,7 +259,6 @@ def plot_timeseries(
     figsize=(10, 6),
     ylabel="",
     grayscale=False,
-    fontname="Arial",
     subtitle=True,
     savefig=None,
     show=True,
@@ -304,7 +302,7 @@ def plot_timeseries(
     ax.spines["left"].set_visible(False)
 
     fig.suptitle(
-        title, y=0.94, fontweight="bold", fontname=fontname, fontsize=14, color="black"
+        title, y=0.94, fontweight="bold", fontsize=14, color="black"
     )
 
     if subtitle:
@@ -369,7 +367,7 @@ def plot_timeseries(
     ax.set_xlabel("")
     if ylabel:
         ax.set_ylabel(
-            ylabel, fontname=fontname, fontweight="bold", fontsize=12, color="black"
+            ylabel, fontweight="bold", fontsize=12, color="black"
         )
     ax.yaxis.set_label_coords(-0.1, 0.5)
 
@@ -406,9 +404,8 @@ def plot_timeseries(
 def plot_histogram(
     returns,
     benchmark,
-    resample="M",
+    resample="ME",
     bins=20,
-    fontname="Arial",
     grayscale=False,
     title="Returns",
     kde=True,
@@ -449,7 +446,7 @@ def plot_histogram(
     ax.spines["left"].set_visible(False)
 
     fig.suptitle(
-        title, y=0.94, fontweight="bold", fontname=fontname, fontsize=14, color="black"
+        title, y=0.94, fontweight="bold", fontsize=14, color="black"
     )
 
     if subtitle:
@@ -565,7 +562,7 @@ def plot_histogram(
 
     ax.set_xlabel("")
     ax.set_ylabel(
-        "Occurrences", fontname=fontname, fontweight="bold", fontsize=12, color="black"
+        "Occurrences", fontweight="bold", fontsize=12, color="black"
     )
     ax.yaxis.set_label_coords(-0.1, 0.5)
 
@@ -611,7 +608,6 @@ def plot_rolling_stats(
     figsize=(10, 6),
     ylabel="",
     grayscale=False,
-    fontname="Arial",
     subtitle=True,
     savefig=None,
     show=True,
@@ -666,7 +662,7 @@ def plot_rolling_stats(
     # use a more precise date string for the x axis locations in the toolbar
     # ax.fmt_xdata = _mdates.DateFormatter('%Y-%m-%d')\
     fig.suptitle(
-        title, y=0.94, fontweight="bold", fontname=fontname, fontsize=14, color="black"
+        title, y=0.94, fontweight="bold", fontsize=14, color="black"
     )
 
     if subtitle:
@@ -690,7 +686,7 @@ def plot_rolling_stats(
 
     if ylabel:
         ax.set_ylabel(
-            ylabel, fontname=fontname, fontweight="bold", fontsize=12, color="black"
+            ylabel, fontweight="bold", fontsize=12, color="black"
         )
         ax.yaxis.set_label_coords(-0.1, 0.5)
 
@@ -738,7 +734,6 @@ def plot_rolling_beta(
     hlcolor="red",
     figsize=(10, 6),
     grayscale=False,
-    fontname="Arial",
     lw=1.5,
     ylabel=True,
     subtitle=True,
@@ -755,7 +750,7 @@ def plot_rolling_beta(
     ax.spines["left"].set_visible(False)
 
     fig.suptitle(
-        title, y=0.94, fontweight="bold", fontname=fontname, fontsize=14, color="black"
+        title, y=0.94, fontweight="bold", fontsize=14, color="black"
     )
 
     if subtitle:
@@ -839,7 +834,7 @@ def plot_rolling_beta(
 
     if ylabel:
         ax.set_ylabel(
-            "Beta", fontname=fontname, fontweight="bold", fontsize=12, color="black"
+            "Beta", fontweight="bold", fontsize=12, color="black"
         )
         ax.yaxis.set_label_coords(-0.1, 0.5)
 
@@ -878,7 +873,6 @@ def plot_longest_drawdowns(
     returns,
     periods=5,
     lw=1.5,
-    fontname="Arial",
     grayscale=False,
     title=None,
     log_scale=False,
@@ -910,7 +904,6 @@ def plot_longest_drawdowns(
         f"{title} - Worst %.0f Drawdown Periods" % periods,
         y=0.94,
         fontweight="bold",
-        fontname=fontname,
         fontsize=14,
         color="black",
     )
@@ -949,7 +942,6 @@ def plot_longest_drawdowns(
     if ylabel:
         ax.set_ylabel(
             "Cumulative Returns",
-            fontname=fontname,
             fontweight="bold",
             fontsize=12,
             color="black",
@@ -992,7 +984,6 @@ def plot_longest_drawdowns(
 def plot_distribution(
     returns,
     figsize=(10, 6),
-    fontname="Arial",
     grayscale=False,
     ylabel=True,
     subtitle=True,
@@ -1013,16 +1004,16 @@ def plot_distribution(
     apply_fnc = _stats.comp if compounded else _np.sum
 
     port["Weekly"] = port["Daily"].resample("W-MON").apply(apply_fnc)
-    port["Weekly"].ffill(inplace=True)
+    port["Weekly"] = port["Weekly"].ffill()
 
-    port["Monthly"] = port["Daily"].resample("M").apply(apply_fnc)
-    port["Monthly"].ffill(inplace=True)
+    port["Monthly"] = port["Daily"].resample("ME").apply(apply_fnc)
+    port["Monthly"] = port["Monthly"].ffill()
 
-    port["Quarterly"] = port["Daily"].resample("Q").apply(apply_fnc)
-    port["Quarterly"].ffill(inplace=True)
+    port["Quarterly"] = port["Daily"].resample("QE").apply(apply_fnc)
+    port["Quarterly"] = port["Quarterly"].ffill()
 
-    port["Yearly"] = port["Daily"].resample("A").apply(apply_fnc)
-    port["Yearly"].ffill(inplace=True)
+    port["Yearly"] = port["Daily"].resample("YE").apply(apply_fnc)
+    port["Yearly"] = port["Yearly"].ffill()
 
     fig, ax = _plt.subplots(figsize=figsize)
     ax.spines["top"].set_visible(False)
@@ -1035,7 +1026,7 @@ def plot_distribution(
     else:
         title = "Return Quantiles"
     fig.suptitle(
-        title, y=0.94, fontweight="bold", fontname=fontname, fontsize=14, color="black"
+        title, y=0.94, fontweight="bold", fontsize=14, color="black"
     )
 
     if subtitle:
@@ -1070,7 +1061,7 @@ def plot_distribution(
 
     if ylabel:
         ax.set_ylabel(
-            "Returns", fontname=fontname, fontweight="bold", fontsize=12, color="black"
+            "Returns", fontweight="bold", fontsize=12, color="black"
         )
         ax.yaxis.set_label_coords(-0.1, 0.5)
 
